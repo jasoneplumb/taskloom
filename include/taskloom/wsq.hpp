@@ -24,14 +24,13 @@ namespace taskloom {
 // when it loses a race, in which case the caller picks another victim or
 // retries.
 //
-// Differences from the ancestral implementation, deliberately:
-// - Indices are monotonically increasing int64_t, so the 32-bit rollover
-//   that broke empty()/count() cannot occur over any realistic lifetime.
-// - Growth retires the old ring into a list owned by the deque instead of
-//   freeing it while concurrent thieves may still hold it; retired rings
-//   are reclaimed in the destructor.
-// - Stealing is pure lock-free; the reader-writer lock arbitration of the
-//   original is gone.
+// Design notes:
+// - Indices are monotonically increasing int64_t: empty() and size() need
+//   no wraparound handling over any realistic lifetime.
+// - Growth retires the old ring into a list owned by the deque, because
+//   concurrent thieves may still hold it; retired rings are reclaimed in
+//   the destructor.
+// - Stealing takes no lock; a lost race surfaces as an empty result.
 //
 // T must be trivially copyable and lock-free as an atomic (a pointer or a
 // small handle): elements live in std::atomic<T> slots because a thief may

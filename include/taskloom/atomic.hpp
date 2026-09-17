@@ -8,9 +8,9 @@
 
 // Atomics convention: this library uses std::atomic directly with explicit
 // memory_order arguments at every call site; there are no wrapper macros.
-// This header carries the pieces that survive that convention: a padding
-// wrapper against false sharing, and compile-time guarantees that the
-// atomic types the other modules build on are lock-free.
+// This header carries what that convention does not already provide: a
+// padding wrapper against false sharing, and compile-time guarantees that
+// the atomic types the other modules build on are lock-free.
 
 namespace taskloom {
 
@@ -33,7 +33,7 @@ static_assert(alignof(padded<std::atomic<std::uint64_t>>) ==
 static_assert(sizeof(padded<char>) == false_sharing_bytes);
 
 // The concurrency modules assume these are lock-free; a platform where they
-// are not would silently serialize every operation through a mutex, so fail
+// are not would silently serialize every operation through a lock, so fail
 // the build instead.
 static_assert(std::atomic<std::uint32_t>::is_always_lock_free);
 static_assert(std::atomic<std::uint64_t>::is_always_lock_free);

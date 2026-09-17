@@ -1,7 +1,7 @@
 # taskloom
 
-A small C++ concurrency library centered on a work-stealing task queue, with supporting modules for atomics, a reader-writer spinlock, dependency events, streaming statistics, a hash container, and hardware constants.
+A small C++ concurrency library centered on a work-stealing deque, with supporting modules for atomic utilities, a reader-writer spinlock, dependency events, streaming statistics, and hardware constants.
 
-Modernized from personal systems code. The port targets standard C++ with CMake, stress tests gated by ThreadSanitizer, and benchmarks.
+Header-only C++20 with CMake and doctest. CI runs the test suite on macOS and Linux, including a ThreadSanitizer job. Steal-throughput benchmarks and design notes are planned.
 
-Status: Phase 1, scaffolding. No releases yet.
+No releases yet.

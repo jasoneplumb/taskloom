@@ -84,8 +84,9 @@ inline std::uint64_t timestamp() noexcept {
   return __rdtsc();
 #elif defined(__aarch64__)
   // Assumes user-space access to the virtual counter is enabled, as it is
-  // on mainstream kernels. Hardened configurations that trap this register
-  // must use the chrono fallback below instead.
+  // on mainstream kernels. Configurations that trap this register are not
+  // supported by this build path; the chrono branch below is compile-time
+  // only, not a runtime fallback.
   std::uint64_t ticks;
   asm volatile("mrs %0, cntvct_el0" : "=r"(ticks) :: "memory");
   return ticks;
