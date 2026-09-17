@@ -20,6 +20,10 @@ jobs:
         run: cmake --build build --parallel
       - name: Test
         run: ctest --test-dir build --output-on-failure
+      - name: Bench smoke
+        run: |
+          ./build/bench/wsq_bench 50000 2
+          ./build/bench/rwlock_bench 50000 2
 
   tsan:
     runs-on: ubuntu-latest
