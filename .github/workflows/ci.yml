@@ -10,20 +10,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --config Release --parallel
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --output-on-failure -C Release
       - name: Bench smoke
+        shell: bash
+        # The Visual Studio generator is multi-config and nests binaries one
+        # directory deeper than the single-config Unix generators.
         run: |
-          ./build/bench/wsq_bench 50000 2
-          ./build/bench/rwlock_bench 50000 2
+          bench_dir=build/bench
+          [ -d build/bench/Release ] && bench_dir=build/bench/Release
+          "$bench_dir/wsq_bench" 50000 2
+          "$bench_dir/rwlock_bench" 50000 2
 
   tsan:
     runs-on: ubuntu-latest
