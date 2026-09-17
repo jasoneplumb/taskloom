@@ -1,5 +1,6 @@
 build*/
 clones/
+logs/
 .cache/
 compile_commands.json
 .DS_Store
