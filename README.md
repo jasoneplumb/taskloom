@@ -6,6 +6,8 @@
 
 A small header-only C++20 concurrency library centered on a work-stealing deque, with the supporting modules a task scheduler needs around one.
 
+taskloom is not a scheduler or a thread pool: it is the data structures a scheduler is assembled from. Each header is usable on its own, depends only on the standard library, and documents its memory-ordering contract in place.
+
 ## Modules
 
 - `taskloom/wsq.hpp`: Chase-Lev work-stealing deque: one owner pushes and pops, any number of thieves steal, lock-free stealing with safe ring growth
@@ -21,7 +23,7 @@ A small header-only C++20 concurrency library centered on a work-stealing deque,
 include(FetchContent)
 FetchContent_Declare(taskloom
   GIT_REPOSITORY https://github.com/jasoneplumb/taskloom.git
-  GIT_TAG mainline
+  GIT_TAG v0.1.0
 )
 FetchContent_MakeAvailable(taskloom)
 target_link_libraries(app PRIVATE taskloom::taskloom)
@@ -40,6 +42,22 @@ if (auto mine = queue.pop()) { run(*mine); }
 if (auto stolen = queue.steal()) { run(*stolen); }
 ```
 
+Dependency tracking with `event`:
+
+```cpp
+#include <taskloom/event.hpp>
+
+struct node : taskloom::event {
+  void on_ready() noexcept override { /* every prerequisite completed */ }
+};
+
+node upload, shaders, frame;
+frame.depends_on(upload);
+frame.depends_on(shaders);
+upload.complete();
+shaders.complete();  // Last prerequisite: frame.on_ready() fires here.
+```
+
 ## Building and testing
 
 ```
@@ -48,7 +66,7 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-Tests run under ThreadSanitizer with `-DTASKLOOM_SANITIZE=thread`; CI covers macOS and Linux plus a TSan job. Benchmarks live in `bench/` and are conservation-checked: a reported number is a verified number.
+Tests run under ThreadSanitizer with `-DTASKLOOM_SANITIZE=thread`; CI covers macOS, Linux, and Windows (MSVC) plus a TSan job. Benchmarks live in `bench/` and are conservation-checked: a reported number is a verified number.
 
 ## Design
 
