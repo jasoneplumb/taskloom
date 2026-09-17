@@ -16,12 +16,12 @@ namespace taskloom {
 // Lifecycle contract: nodes outlive every edge that references them, and
 // reset() may only run while no completions or registrations are in flight.
 // on_ready() fires at most once per cycle (between resets): adding an edge
-// to a node that may already have fired is a contract violation — the latch
+// to a node that may already have fired is a contract violation: the latch
 // suppresses a second fire and debug builds assert. on_ready() must not
 // throw; an exception would strand the remaining dependents. If a
 // registration fails with an allocation exception, the dependent may fire
-// during unwinding (as though the failed edge never existed) — callers that
-// catch and retry must expect it to have fired already.
+// during unwinding (as though the failed edge never existed), so callers
+// that catch and retry must expect it to have fired already.
 class event {
  public:
   event() = default;
