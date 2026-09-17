@@ -8,12 +8,12 @@ A small header-only C++20 concurrency library centered on a work-stealing deque,
 
 ## Modules
 
-- `taskloom/wsq.hpp` — Chase-Lev work-stealing deque: one owner pushes and pops, any number of thieves steal, lock-free stealing with safe ring growth
-- `taskloom/rwlock.hpp` — reader-writer spinlock with a seq_cst acquisition protocol; composes with `std::shared_lock` and `std::unique_lock`
-- `taskloom/event.hpp` — dependency-graph completion nodes: a node fires once its last prerequisite completes, with race-safe edge addition
-- `taskloom/stats.hpp` — constant-space streaming statistics whose merge preserves variance across threads
-- `taskloom/atomic.hpp` — `padded<T>` false-sharing isolation and lock-free compile-time guarantees
-- `taskloom/hw.hpp` — cache-line and page constants, spin hint, tick counter
+- `taskloom/wsq.hpp`: Chase-Lev work-stealing deque: one owner pushes and pops, any number of thieves steal, lock-free stealing with safe ring growth
+- `taskloom/rwlock.hpp`: reader-writer spinlock with a seq_cst acquisition protocol; composes with `std::shared_lock` and `std::unique_lock`
+- `taskloom/event.hpp`: dependency-graph completion nodes: a node fires once its last prerequisite completes, with race-safe edge addition
+- `taskloom/stats.hpp`: constant-space streaming statistics whose merge preserves variance across threads
+- `taskloom/atomic.hpp`: `padded<T>` false-sharing isolation and lock-free compile-time guarantees
+- `taskloom/hw.hpp`: cache-line and page constants, spin hint, tick counter
 
 ## Quick start
 
